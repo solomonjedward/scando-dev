@@ -1,0 +1,89 @@
+
+#server
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  tomcat:
+    max-swallow-size: 100MB
+
+#Database
+scando:
+  datasource:
+    jdbc-url: jdbc:postgresql://rds-postgres.cemocqtclv22.ap-south-1.rds.amazonaws.com:5432/mypostgresql
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driverClassName: org.postgresql.Driver
+    minimumIdle: 2
+    maximumPoolSize: 1000
+  server:
+    host: dev.scando.world:8080
+    notification: http://dev.scando.world:8082
+  aws:
+    sns:
+      enabled: false
+
+
+#Spring
+spring:
+  jpa:
+    properties:
+      hibernate:
+        generate_statistics: false
+        jdbc:
+          batch_size: 30
+  application:
+    name: scando-learning-platform
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  jwt:
+    secret: a9a5d626c5f95d78d8d662a60ddf35a928e87d62f201ea017bd1d8ec4b64a0f4
+  security:
+    user:
+      name: client
+      password: client
+    boot:
+      admin:
+        client:
+          enable: true
+          url: http://dev.scando.world:8081
+          username: admin
+          password: password
+          instance:
+            management-base-url: http://dev.scando.world:8080
+            service-base-url: http://dev.scando.world:8080
+            metadata:
+              user:
+                name: ${spring.security.user.name}
+                password: ${spring.security.user.password}
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
+
+#Actuator
+management:
+  trace:
+    include: "*"
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    actuator:
+      enabled: true
+  security:
+    enabled: false
+  endpoint:
+    health:
+      show-details: always
+    loggers:
+      enabled: true
+
+
+#Logging
+logging:
+  config: classpath:logback-dev.xml
+  file:
+    name: logs/scando.log
+
